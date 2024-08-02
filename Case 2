@@ -1,0 +1,70 @@
+import datetime
+
+def get_birthdate():
+    try:
+        day = int(input("Введите день вашего рождения: "))
+        month = int(input("Введите месяц вашего рождения: "))
+        year = int(input("Введите год вашего рождения: "))
+        return day, month, year
+    except ValueError:
+        print("Пожалуйста, введите корректное числовое значение.")
+        return get_birthdate()
+
+def get_weekday(day, month, year):
+    try:
+        birth_date = datetime.date(year, month, day)
+        days_of_week = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]
+        weekday = birth_date.weekday()
+        return days_of_week[weekday]
+    except ValueError:
+        return "Некорректная дата. Пожалуйста, введите правильные значения дня, месяца и года."
+
+def is_leap_year(year):
+    if (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0):
+        return True
+    return False
+
+def calculate_age(day, month, year):
+    today = datetime.date.today()
+    birth_date = datetime.date(year, month, day)
+    age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
+    return age
+
+def display_date_as_stars(day, month, year):
+    digits = {
+        '0': [" *** ", "*   *", "*   *", "*   *", " *** "],
+        '1': ["  *  ", " **  ", "  *  ", "  *  ", " *** "],
+        '2': [" *** ", "*   *", "   * ", "  *  ", "*****"],
+        '3': [" *** ", "*   *", "  ** ", "*   *", " *** "],
+        '4': ["*  * ", "*  * ", "*****", "   * ", "   * "],
+        '5': ["*****", "*    ", "**** ", "    *", "**** "],
+        '6': [" *** ", "*    ", "**** ", "*   *", " *** "],
+        '7': ["*****", "    *", "   * ", "  *  ", " *   "],
+        '8': [" *** ", "*   *", " *** ", "*   *", " *** "],
+        '9': [" *** ", "*   *", " ****", "    *", " *** "]
+    }
+
+    def get_digit_representation(number):
+        return [digits[digit] for digit in str(number)]
+
+    day_representation = get_digit_representation(day)
+    month_representation = get_digit_representation(month)
+    year_representation = get_digit_representation(year)
+
+    for i in range(5):
+        line = ' '.join(part[i] for part in day_representation) + "   " + \
+               ' '.join(part[i] for part in month_representation) + "   " + \
+               ' '.join(part[i] for part in year_representation)
+        print(line)
+
+
+day, month, year = get_birthdate()
+weekday = get_weekday(day, month, year)
+leap_year = is_leap_year(year)
+age = calculate_age(day, month, year)
+
+print(f"Вы родились в {weekday}.")
+print(f"Год {year} {'был' if leap_year else 'не был'} високосным.")
+print(f"Вам сейчас {age} лет.")
+print("Дата вашего рождения:")
+display_date_as_stars(day, month, year)
